@@ -1,0 +1,18 @@
+{
+  "name": "Vinayak Heart Medicare",
+  "short_name": "Vinayak Heart",
+  "description": "Expert physician, cardiologist and diabetologist care with online appointment booking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#285078",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/favicon.webp",
+      "sizes": "any",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

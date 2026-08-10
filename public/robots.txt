@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow build/tooling paths if ever exposed
+Disallow: /src/
+Disallow: /node_modules/
+
+Sitemap: https://www.vinayakheart.com/sitemap.xml
