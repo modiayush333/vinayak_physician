@@ -107,17 +107,19 @@ export default function Footer() {
                   {brand.quote}
                 </p>
 
-                <button
+                <motion.button
                   type="button"
                   onClick={() => setBookingOpen(true)}
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   className="
-                    type-btn mt-6 inline-flex items-center justify-center rounded-full bg-brand 
-                    px-7 py-3 text-white text-[16px] md:text-md transition hover:bg-[#003871] cursor-pointer
+                    type-btn mt-6 inline-flex cursor-pointer items-center justify-center rounded-full bg-brand 
+                    px-7 py-3 text-[16px] text-white transition hover:bg-[#003871] md:text-md
                     sm:mt-7 sm:px-8 sm:py-3.5
                   "
                 >
                   {bookOnline.label}
-                </button>
+                </motion.button>
               </motion.div>
 
               {/* Col 2 — Explore (vertical) */}

@@ -1,335 +1,402 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { processData } from '../assets/Data/Process'
+import { EASE_OUT } from '../lib/motion'
 
-const BRAND = '#285078'
-const ARC_IDLE = '#D0D5DA'
-const NUM = '#93A4B3'
+const STEP_COLORS = ['#1A354F', '#285078', '#0888A0', '#5EC4D4']
+const ICON_COLOR = '#5dc2d2'
+const LINE_SETTLE_MS = 400
 
-function StepImage({ src, alt, active, size = 46 }) {
+function buildGeometry(count) {
+  const circleR = 72
+  const arcR = 84
+  const gap = 32
+  const padX = 30
+  const centers = []
+
+  for (let i = 0; i < count; i += 1) {
+    centers.push(padX + arcR + i * (2 * arcR + gap))
+  }
+
+  const width = centers[count - 1] + arcR + padX + 20
+  const midY = arcR + 20
+  const height = midY * 2 + 10
+
+  return { circleR, arcR, gap, centers, width, height, midY }
+}
+
+function pt(cx, cy, r, deg) {
+  const rad = (deg * Math.PI) / 180
+  return {
+    x: cx + r * Math.cos(rad),
+    y: cy - r * Math.sin(rad),
+  }
+}
+
+function buildSegments(geo, colors) {
+  const { centers, arcR, midY, gap } = geo
+  const segments = []
+
+  centers.forEach((cx, i) => {
+    const color = colors[i % colors.length]
+    const start = pt(cx, midY, arcR, 215)
+    const end = pt(cx, midY, arcR, -35)
+
+    segments.push({
+      type: 'solid',
+      color,
+      d: `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${arcR} ${arcR} 0 1 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`,
+      showStartDot: i === 0,
+      startDot: start,
+      showArrow: i === centers.length - 1,
+      arrowAt: end,
+      arrowAngle: -35,
+    })
+
+    if (i < centers.length - 1) {
+      const nextCx = centers[i + 1]
+      const nextStart = pt(nextCx, midY, arcR, 215)
+      const midX = (end.x + nextStart.x) / 2
+      const dip = midY + arcR * 0.52 + Math.min(gap * 0.12, 6)
+      const c1x = end.x + (midX - end.x) * 0.55
+      const c2x = nextStart.x - (nextStart.x - midX) * 0.55
+
+      segments.push({
+        type: 'dotted',
+        color: colors[(i + 1) % colors.length],
+        d: `M ${end.x.toFixed(2)} ${end.y.toFixed(2)} C ${c1x.toFixed(2)} ${dip.toFixed(2)}, ${c2x.toFixed(2)} ${dip.toFixed(2)}, ${nextStart.x.toFixed(2)} ${nextStart.y.toFixed(2)}`,
+      })
+    }
+  })
+
+  return segments
+}
+
+function TintedIcon({ src, alt, color, size = 36 }) {
   return (
-    <img
-      src={src}
-      alt={alt || ''}
-      width={size}
-      height={size}
-      draggable={false}
-      loading="lazy"
-      decoding="async"
-      className="object-contain"
+    <span
+      className="inline-block shrink-0"
       style={{
-        filter: active
-          ? 'brightness(0) invert(1)'
-          : 'brightness(0) saturate(100%) invert(27%) sepia(24%) saturate(900%) hue-rotate(173deg) brightness(92%) contrast(90%)',
+        width: size,
+        height: size,
+        backgroundColor: color,
+        WebkitMaskImage: `url(${src})`,
+        maskImage: `url(${src})`,
+        WebkitMaskSize: 'contain',
+        maskSize: 'contain',
+        WebkitMaskRepeat: 'no-repeat',
+        maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center',
+        maskPosition: 'center',
       }}
+      role={alt ? 'img' : undefined}
+      aria-label={alt || undefined}
+      aria-hidden={alt ? undefined : true}
     />
   )
 }
 
-/**
- * Reference-scale geometry — large circle filling most of the arc
- * (matches Labozen / reference screenshot proportions).
- */
-const CX = 150
-const CY = 155
-const CIRCLE_R = 56
-const ARC_R = 118
-const VB_W = 300
-const VB_H = 260
-const ARC_IDLE_D = `M ${CX - ARC_R} ${CY} A ${ARC_R} ${ARC_R} 0 0 1 ${CX + ARC_R} ${CY}`
+function ArrowHead({ x, y, angleDeg, color }) {
+  const rad = (angleDeg * Math.PI) / 180
+  const tx = Math.sin(rad)
+  const ty = Math.cos(rad)
+  const size = 11
+  const px = -ty
+  const py = tx
 
-/** Tapered semicircle — thickest at apex, pointed at ends */
-function taperedArcPath(cx, cy, r, maxHalfW, minHalfW = 0.2) {
-  const N = 64
-  const outer = []
-  const inner = []
-
-  for (let i = 0; i <= N; i += 1) {
-    const t = i / N
-    const ang = Math.PI * (1 - t)
-    const halfW = minHalfW + (maxHalfW - minHalfW) * Math.sin(t * Math.PI)
-    const cos = Math.cos(ang)
-    const sin = Math.sin(ang)
-    outer.push([cx + (r + halfW) * cos, cy - (r + halfW) * sin])
-    inner.push([cx + (r - halfW) * cos, cy - (r - halfW) * sin])
-  }
-
-  let d = `M ${outer[0][0].toFixed(2)} ${outer[0][1].toFixed(2)}`
-  for (let i = 1; i < outer.length; i += 1) {
-    d += ` L ${outer[i][0].toFixed(2)} ${outer[i][1].toFixed(2)}`
-  }
-  for (let i = inner.length - 1; i >= 0; i -= 1) {
-    d += ` L ${inner[i][0].toFixed(2)} ${inner[i][1].toFixed(2)}`
-  }
-  return `${d} Z`
-}
-
-const TAPERED_ARC_D = taperedArcPath(CX, CY, ARC_R, 1.5, 0.1)
-
-/** Heltro-style soft ease */
-const EASE = [0.25, 0.1, 0.25, 1]
-const EASE_OUT = [0.16, 1, 0.3, 1]
-/** Title + description lift (px) — desktop hover only */
-const TEXT_LIFT = 36
-/** Circle lifts less so a clear gap stays under the fixed arc */
-const CIRCLE_LIFT = 6
-
-function StepGraphic({ step, isActive, liftEnabled }) {
-  const maskId = `arc-reveal-${step.id}`
-  const iconTop = `${((CY / VB_H) * 100).toFixed(2)}%`
-  const label = step.title.replace(/\n/g, ' ')
+  const tip = { x: x + tx * size, y: y + ty * size }
+  const left = { x: x - px * size * 0.55 - tx * 2, y: y - py * size * 0.55 - ty * 2 }
+  const right = { x: x + px * size * 0.55 - tx * 2, y: y + py * size * 0.55 - ty * 2 }
 
   return (
-    <div className="relative mx-auto w-full max-w-[220px] sm:max-w-[260px] xl:max-w-[300px]">
-      {/* Fixed arc layer — does not move on hover */}
-      <svg
-        viewBox={`0 0 ${VB_W} ${VB_H}`}
-        className="relative z-0 h-auto w-full"
-        aria-hidden="true"
-        fill="none"
-      >
-        <defs>
-          <mask id={maskId}>
-            <motion.path
-              d={ARC_IDLE_D}
-              stroke="white"
-              strokeWidth="22"
-              strokeLinecap="butt"
-              fill="none"
-              pathLength={1}
-              initial={false}
-              animate={{ strokeDashoffset: isActive ? 0 : 1.05 }}
-              transition={{
-                duration: isActive ? 0.75 : 0.5,
-                ease: EASE_OUT,
-              }}
-              style={{ strokeDasharray: 1 }}
-            />
-          </mask>
-        </defs>
+    <polygon
+      points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
+      fill={color}
+    />
+  )
+}
 
-        <motion.path
-          d={TAPERED_ARC_D}
-          fill={ARC_IDLE}
-          initial={false}
-          animate={{ opacity: isActive ? 0 : 1 }}
-          transition={{ duration: 0.4, ease: EASE }}
-        />
+/** Desktop / large laptop / Mac — horizontal wave */
+function WaveDesktop({ steps, activeIndex, onActivate, lineInView }) {
+  const uid = useId().replace(/:/g, '')
+  const geo = buildGeometry(steps.length)
+  const { centers, width, height, midY, circleR } = geo
+  const segments = buildSegments(geo, STEP_COLORS)
 
-        <motion.path
-          d={TAPERED_ARC_D}
-          fill={BRAND}
-          mask={`url(#${maskId})`}
-          initial={false}
-          animate={{ opacity: isActive ? 1 : 0 }}
-          transition={{
-            duration: isActive ? 0.12 : 0.35,
-            delay: isActive ? 0 : 0.12,
-            ease: EASE,
-          }}
-        />
-      </svg>
-
-      {/* Step number — stays with the fixed arc */}
-      <motion.span
-        initial={false}
-        animate={{ opacity: isActive ? 0 : 1 }}
-        transition={{ duration: 0.35, ease: EASE }}
-        className="
-          pointer-events-none absolute left-1/2 z-10 -translate-x-1/2
-          font-body text-[14px] font-normal sm:text-[16px] md:text-[17px]
-        "
-        style={{
-          color: NUM,
-          top: `${(((CY - ARC_R + 16) / VB_H) * 100).toFixed(2)}%`,
-        }}
-        aria-hidden={isActive}
-      >
-        {step.id}
-      </motion.span>
-
-      {/* Circle + images — slight lift on desktop only */}
-      <motion.div
-        initial={false}
-        animate={{ y: liftEnabled && isActive ? -CIRCLE_LIFT : 0 }}
-        transition={{ duration: 0.65, ease: EASE_OUT }}
-        className="pointer-events-none absolute inset-0 z-[1] will-change-transform"
-      >
+  return (
+    <div className="mx-auto hidden w-full max-w-6xl xl:max-w-7xl lg:block">
+      <div className="relative w-full">
         <svg
-          viewBox={`0 0 ${VB_W} ${VB_H}`}
-          className="h-auto w-full"
+          viewBox={`0 0 ${width} ${height}`}
+          className="block h-auto w-full overflow-visible"
           aria-hidden="true"
           fill="none"
         >
-          <motion.circle
-            cx={CX}
-            cy={CY}
-            fill={BRAND}
-            initial={false}
-            animate={{
-              opacity: isActive ? 1 : 0,
-              r: isActive ? CIRCLE_R : CIRCLE_R * 0.78,
-            }}
-            transition={{
-              opacity: { duration: 0.5, ease: EASE },
-              r: { duration: 0.6, ease: EASE_OUT },
-            }}
-          />
+          <defs>
+            <filter id={`soft-shadow-${uid}`} x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#1A354F" floodOpacity="0.12" />
+              <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.05" />
+            </filter>
+          </defs>
+
+          {segments.map((seg, i) => (
+            <motion.path
+              key={`seg-${i}`}
+              d={seg.d}
+              stroke={seg.color}
+              strokeWidth={seg.type === 'dotted' ? 2.5 : 3.25}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={seg.type === 'dotted' ? '0.01 9' : undefined}
+              fill="none"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={
+                lineInView
+                  ? { pathLength: 1, opacity: 1 }
+                  : { pathLength: 0, opacity: 0 }
+              }
+              transition={{ duration: 0.85, delay: lineInView ? 0.07 * i : 0, ease: EASE_OUT }}
+            />
+          ))}
+
+          {segments.map((seg, i) =>
+            seg.showStartDot && seg.startDot ? (
+              <motion.circle
+                key={`dot-${i}`}
+                cx={seg.startDot.x}
+                cy={seg.startDot.y}
+                r={4.5}
+                fill={seg.color}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={lineInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+                transition={{ duration: 0.35, delay: lineInView ? 0.45 : 0, ease: EASE_OUT }}
+              />
+            ) : null,
+          )}
+
+          {segments.map((seg, i) =>
+            seg.showArrow && seg.arrowAt ? (
+              <motion.g
+                key={`arrow-${i}`}
+                initial={{ opacity: 0 }}
+                animate={lineInView ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ duration: 0.35, delay: lineInView ? 0.95 : 0, ease: EASE_OUT }}
+              >
+                <ArrowHead
+                  x={seg.arrowAt.x}
+                  y={seg.arrowAt.y}
+                  angleDeg={seg.arrowAngle}
+                  color={seg.color}
+                />
+              </motion.g>
+            ) : null,
+          )}
+
+          {centers.map((cx, index) => (
+            <circle
+              key={`disc-${steps[index].id}`}
+              cx={cx}
+              cy={midY}
+              r={circleR}
+              fill="#ffffff"
+              filter={`url(#soft-shadow-${uid})`}
+            />
+          ))}
         </svg>
 
-        <div
-          className="absolute left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
-          style={{ top: iconTop }}
-        >
-          <motion.div
-            initial={false}
-            animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 0.9 }}
-            transition={{ duration: 0.45, ease: EASE_OUT }}
-            className="absolute"
-            aria-hidden={!isActive}
-          >
-            <StepImage
-              src={step.image}
-              alt={`${label} process step icon at Vinayak Heart Medicare`}
-              active
-              size={liftEnabled ? 72 : 52}
-            />
-          </motion.div>
-          <motion.div
-            initial={false}
-            animate={{ opacity: isActive ? 0 : 1, scale: isActive ? 1.05 : 1 }}
-            transition={{ duration: 0.35, ease: EASE }}
-            aria-hidden={isActive}
-          >
-            <StepImage
-              src={step.image}
-              alt=""
-              active={false}
-              size={liftEnabled ? 68 : 48}
-            />
-          </motion.div>
-        </div>
-      </motion.div>
+        {steps.map((step, index) => {
+          const cx = centers[index]
+          const isActive = index === activeIndex
+          const leftPct = (cx / width) * 100
+          const topPct = (midY / height) * 100
+          const sizeW = ((circleR * 2) / width) * 100
+          const sizeH = ((circleR * 2) / height) * 100
+          const label = step.title.replace(/\n/g, ' ')
+
+          return (
+            <div
+              key={step.id}
+              className="absolute z-10"
+              style={{
+                left: `${leftPct}%`,
+                top: `${topPct}%`,
+                width: `${sizeW}%`,
+                height: `${sizeH}%`,
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              <motion.button
+                type="button"
+                aria-label={`Process step ${step.id}: ${label}`}
+                aria-pressed={isActive}
+                onClick={() => onActivate(index)}
+                onMouseEnter={() => onActivate(index)}
+                onFocus={() => onActivate(index)}
+                initial={{ opacity: 0, scale: 0.88 }}
+                animate={
+                  lineInView
+                    ? { opacity: 1, scale: isActive ? 1.04 : 1 }
+                    : { opacity: 0, scale: 0.88 }
+                }
+                transition={{
+                  duration: 0.5,
+                  delay: lineInView ? 0.12 + index * 0.08 : 0,
+                  ease: EASE_OUT,
+                }}
+                className="
+                  flex h-full w-full cursor-pointer flex-col items-center justify-center
+                  gap-1 rounded-full border-0 bg-transparent px-2 text-center outline-none
+                  focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2
+                  xl:gap-1.5 xl:px-3
+                "
+              >
+                <TintedIcon
+                  src={step.image}
+                  alt={`${label} process step icon at Vinayak Heart Medicare`}
+                  color={ICON_COLOR}
+                  size={65}
+                />
+                <span className="max-w-[92%] text-center font-display text-[14px] font-semibold leading-[1.2] tracking-tight text-[#3A4A58] xl:text-[20px] 2xl:text-[23px]">
+                  {step.title}
+                </span>
+              </motion.button>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
 
-function ProcessStep({ step, isActive, onActivate, index, inView, liftEnabled }) {
-  const label = step.title.replace(/\n/g, ' ')
-
+/** Phone + tablet — vertical timeline */
+function WaveMobile({ steps, activeIndex, onActivate, lineInView }) {
   return (
-    <motion.button
-      type="button"
-      aria-label={`Process step ${step.id}: ${label}`}
-      aria-pressed={isActive}
-      onClick={onActivate}
-      onMouseEnter={liftEnabled ? onActivate : undefined}
-      onFocus={onActivate}
-      initial={{ opacity: 0, y: 28 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-      transition={{
-        duration: 0.65,
-        delay: 0.12 + index * 0.1,
-        ease: EASE_OUT,
-      }}
-      className="
-        relative mx-auto flex w-full max-w-[320px] cursor-pointer flex-col items-center
-        border-0 bg-transparent p-0 text-center outline-none
-        focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2
-        xl:max-w-none
-      "
-      style={{ paddingTop: liftEnabled ? TEXT_LIFT : 0 }}
-    >
-      <StepGraphic step={step} isActive={isActive} liftEnabled={liftEnabled} />
+    <div className="relative mx-auto flex w-full max-w-[20rem] flex-col items-center gap-1 sm:max-w-[22rem] md:max-w-[24rem] lg:hidden">
+      {steps.map((step, index) => {
+        const color = STEP_COLORS[index % STEP_COLORS.length]
+        const isActive = index === activeIndex
+        const label = step.title.replace(/\n/g, ' ')
+        const isLast = index === steps.length - 1
 
-      <motion.div
-        initial={false}
-        animate={{ y: liftEnabled && isActive ? -TEXT_LIFT : 0 }}
-        transition={{ duration: 0.65, ease: EASE_OUT }}
-        className="flex w-full flex-col items-center"
-      >
-        <h3
-          className="
-            mx-auto mt-1 w-full max-w-[280px] whitespace-pre-line
-            font-body text-[18px] font-medium leading-[1.35] text-brand
-            sm:max-w-[300px] sm:text-[19px] md:text-[20px]
-            xl:max-w-none xl:px-1 xl:text-[21px]
-          "
-        >
-          {step.title}
-        </h3>
+        return (
+          <motion.div
+            key={step.id}
+            initial={{ opacity: 0, y: 18 }}
+            animate={lineInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+            transition={{
+              duration: 0.5,
+              delay: lineInView ? index * 0.07 : 0,
+              ease: EASE_OUT,
+            }}
+            className="relative flex w-full flex-col items-center"
+          >
+            <button
+              type="button"
+              aria-label={`Process step ${step.id}: ${label}`}
+              aria-pressed={isActive}
+              onClick={() => onActivate(index)}
+              className="
+                relative z-10 flex h-[9rem] w-[9rem] shrink-0 flex-col
+                items-center justify-center gap-1.5 rounded-full border-0 bg-white
+                px-3 text-center outline-none
+                focus-visible:ring-2 focus-visible:ring-brand/30
+                sm:h-[10rem] sm:w-[10rem]
+                md:h-[11rem] md:w-[11rem]
+              "
+              style={{
+                boxShadow: '0 8px 22px rgba(26,53,79,0.12), 0 2px 6px rgba(0,0,0,0.05)',
+                outline: `2.5px solid ${color}`,
+                outlineOffset: '3px',
+                transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                transition: 'transform 0.3s ease',
+              }}
+            >
+              <TintedIcon
+                src={step.image}
+                alt={`${label} process step icon at Vinayak Heart Medicare`}
+                color={ICON_COLOR}
+                size={60}
+              />
+              <span className="max-w-[90%] text-center font-display text-[15px] font-semibold leading-[1.2] tracking-tight text-[#3A4A58] sm:text-[12px] md:text-[20px]">
+                {step.title}
+              </span>
+            </button>
 
-        <div
-          className={`
-            mx-auto w-full max-w-[280px] overflow-hidden transition-[max-height,opacity,margin] duration-500 ease-out
-            sm:max-w-[300px] xl:max-w-none xl:px-1
-            ${isActive ? 'mt-2.5 max-h-40 opacity-100 sm:mt-3' : 'mt-0 max-h-0 opacity-0'}
-          `}
-          aria-hidden={!isActive}
-        >
-          <p className="font-body text-[15px] font-normal leading-[1.65] text-gray-700 sm:text-[16px] md:text-[16px]">
-            {step.description}
-          </p>
-        </div>
-      </motion.div>
-    </motion.button>
+            {!isLast && (
+              <motion.div
+                className="mt-3 w-0 origin-top border-l-[3px] border-dotted md:mt-4"
+                style={{ borderColor: STEP_COLORS[(index + 1) % STEP_COLORS.length] }}
+                initial={{ scaleY: 0, height: 28 }}
+                animate={lineInView ? { scaleY: 1, height: 32 } : { scaleY: 0 }}
+                transition={{
+                  duration: 0.45,
+                  delay: lineInView ? 0.2 + index * 0.12 : 0,
+                  ease: EASE_OUT,
+                }}
+                aria-hidden
+              />
+            )}
+          </motion.div>
+        )
+      })}
+    </div>
   )
 }
 
-/**
- * Process — large reference-scale arcs (4 equal columns on desktop)
- */
 export default function Process() {
   const { title, steps } = processData
   const sectionRef = useRef(null)
-  const inView = useInView(sectionRef, { once: true, amount: 0.15 })
+  const lineRef = useRef(null)
+  const inView = useInView(sectionRef, { once: true, amount: 0.2 })
+  const lineInView = useInView(lineRef, {
+    once: true,
+    amount: 0.4,
+    margin: '0px 0px -12% 0px',
+  })
+  const [lineReady, setLineReady] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
-  const [liftEnabled, setLiftEnabled] = useState(false)
 
   useEffect(() => {
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1280px)')
-    const sync = () => setLiftEnabled(mq.matches)
-    sync()
-    mq.addEventListener('change', sync)
-    return () => mq.removeEventListener('change', sync)
-  }, [])
+    if (!lineInView) return undefined
+    const timer = window.setTimeout(() => setLineReady(true), LINE_SETTLE_MS)
+    return () => window.clearTimeout(timer)
+  }, [lineInView])
 
   return (
     <section
       ref={sectionRef}
       id="process"
-      className="relative overflow-x-clip bg-[#eef1f4] py-14 sm:py-16 md:py-20 lg:h-screen lg:py-24 xl:py-28"
+      className="relative overflow-x-clip bg-[#F4F7FA] py-12 sm:py-14 md:py-16 lg:py-20 xl:py-24"
     >
       <div className="site-shell">
-        <motion.h2
-          initial={{ opacity: 0, y: 22 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: EASE_OUT }}
-          className="type-section-title mx-auto mb-8 max-w-3xl text-center text-[#292929] sm:mb-10 md:mb-12 lg:mb-14 xl:mb-16"
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+          transition={{ duration: 0.75, ease: EASE_OUT }}
+          className="mb-8 flex flex-col items-center text-center sm:mb-10 md:mb-12 lg:mb-14"
         >
-          {title}
-        </motion.h2>
+          <h2 className="type-section-title max-w-3xl px-1 text-[#1A354F]">{title}</h2>
+        </motion.div>
 
-        <div
-          className="
-            grid grid-cols-1 gap-10
-            sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12
-            xl:grid-cols-4 xl:gap-x-4 xl:gap-y-0
-            2xl:gap-x-6
-          "
+        <motion.div
+          ref={lineRef}
+          initial={{ opacity: 0, y: 32 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: EASE_OUT }}
         >
-          {steps.map((step, index) => (
-            <ProcessStep
-              key={step.id}
-              step={step}
-              index={index}
-              inView={inView}
-              liftEnabled={liftEnabled}
-              isActive={index === activeIndex}
-              onActivate={() => setActiveIndex(index)}
-            />
-          ))}
-        </div>
+          <WaveDesktop
+            steps={steps}
+            activeIndex={activeIndex}
+            onActivate={setActiveIndex}
+            lineInView={lineReady}
+          />
+          <WaveMobile
+            steps={steps}
+            activeIndex={activeIndex}
+            onActivate={setActiveIndex}
+            lineInView={lineReady}
+          />
+        </motion.div>
       </div>
     </section>
   )

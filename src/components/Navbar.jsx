@@ -47,7 +47,13 @@ export default function Navbar() {
         }`}
       >
         <div className="container mx-auto flex min-h-16 items-center justify-between gap-2 px-4 py-2.5 sm:min-h-[72px] sm:gap-3 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-          <a href="#hero" className="flex min-w-0 shrink items-center">
+          <motion.a
+            href="#hero"
+            className="flex min-w-0 shrink items-center"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
             <img
               src={images.logo}
               alt="Vinayak Heart Medicare logo — cardiologist and physician clinic"
@@ -57,12 +63,26 @@ export default function Navbar() {
               decoding="async"
               fetchPriority="high"
             />
-          </a>
+          </motion.a>
 
           {/* Desktop / Mac — full links from lg up */}
-          <ul className="hidden items-center gap-0.5 lg:flex xl:gap-1">
+          <motion.ul
+            className="hidden items-center gap-0.5 lg:flex xl:gap-1"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.06, delayChildren: 0.15 } },
+            }}
+          >
             {NAV_LINKS.map((link) => (
-              <li key={link.label}>
+              <motion.li
+                key={link.label}
+                variants={{
+                  hidden: { opacity: 0, y: -8 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+                }}
+              >
                 <a
                   href={link.href}
                   className="type-nav group relative px-2.5 py-2 text-[#294f56] transition-colors hover:text-brand-teal xl:px-4"
@@ -70,11 +90,16 @@ export default function Navbar() {
                   {link.label}
                   <span className="absolute bottom-0 left-2.5 right-2.5 h-[1.5px] origin-left scale-x-0 rounded-full bg-brand-teal transition-transform duration-300 group-hover:scale-x-100 xl:left-4 xl:right-4" />
                 </a>
-              </li>
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <motion.div
+            className="flex items-center gap-2 sm:gap-3"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
             <motion.button
               type="button"
               onClick={openBookingModal}
@@ -105,7 +130,7 @@ export default function Navbar() {
                 className="block h-[1.5px] w-5 bg-[#173d44]"
               />
             </button>
-          </div>
+          </motion.div>
         </div>
       </nav>
 

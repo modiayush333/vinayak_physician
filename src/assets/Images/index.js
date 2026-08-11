@@ -19,6 +19,17 @@ import Appointment from './appointment.png'
 import Diagnosis from './diagnosis.png'
 import treatment from './treatment.png'
 import followup from './followup.png'
+import FacilityDefibrillator from './Facilites/Defibrillator.webp'
+import FacilityECG from './Facilites/ECG.webp'
+import FacilityEcho from './Facilites/Echo.webp'
+import FacilityGlucometer from './Facilites/Glucometer.webp'
+import FacilityICU from './Facilites/ICU.webp'
+import FacilityMonitor from './Facilites/Monitor.webp'
+import FacilityNebulizer from './Facilites/Nebulizer.webp'
+import FacilityOxygen from './Facilites/Oxygen Machine.webp'
+import FacilityPulseOximeter from './Facilites/Pulse Oximeter.webp'
+import FacilityPump from './Facilites/Pump.webp'
+import FacilityVentilator from './Facilites/Ventilator.webp'
 
 const images = {
   drimage,
@@ -42,6 +53,17 @@ const images = {
   Diagnosis,
   treatment,
   followup,
+  FacilityDefibrillator,
+  FacilityECG,
+  FacilityEcho,
+  FacilityGlucometer,
+  FacilityICU,
+  FacilityMonitor,
+  FacilityNebulizer,
+  FacilityOxygen,
+  FacilityPulseOximeter,
+  FacilityPump,
+  FacilityVentilator,
 }
 
 export default images

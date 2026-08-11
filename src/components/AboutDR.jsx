@@ -1,15 +1,17 @@
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { aboutDrData } from '../assets/Data/AboutDR'
-
-const EASE = [0.22, 1, 0.36, 1]
+import { EASE, fadeLeft, fadeRight, VIEWPORT } from '../lib/motion'
 
 function RevealBlock({ children, delay = 0, className = '' }) {
+  const reduce = useReducedMotion()
+  if (reduce) return <div className={className}>{children}</div>
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, filter: 'blur(6px)' }}
-      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      viewport={{ once: true, amount: 0.3, margin: '0px 0px -8% 0px' }}
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VIEWPORT}
       transition={{ duration: 0.7, delay, ease: EASE }}
       className={className}
     >
@@ -34,9 +36,9 @@ export default function AboutDR() {
     education,
     experience,
     recognition,
-    expertise,
   } = aboutDrData
   const sectionRef = useRef(null)
+  const reduce = useReducedMotion()
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -53,8 +55,13 @@ export default function AboutDR() {
       className="relative overflow-x-clip bg-white py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28"
     >
       <div className="container mx-auto grid max-w-6xl items-start gap-8 px-4 sm:gap-10 sm:px-6 md:px-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.18fr)] lg:gap-14 lg:px-10 xl:gap-20 xl:px-12">
-        {/* Image — after content on mobile/tablet, left on desktop */}
-        <div className="relative order-2 mx-auto w-full max-w-md lg:order-1 lg:mx-0 lg:max-w-none lg:sticky lg:top-24 lg:self-start">
+        <motion.div
+          className="relative order-2 mx-auto w-full max-w-md lg:order-1 lg:mx-0 lg:max-w-none lg:sticky lg:top-24 lg:self-start"
+          initial={reduce ? false : 'hidden'}
+          whileInView="show"
+          viewport={VIEWPORT}
+          variants={fadeLeft}
+        >
           <div
             className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-brand-teal/20 blur-3xl"
             aria-hidden="true"
@@ -65,7 +72,7 @@ export default function AboutDR() {
           />
 
           <motion.div
-            style={{ scale: imageScale, y: imageY }}
+            style={reduce ? undefined : { scale: imageScale, y: imageY }}
             className="relative overflow-hidden rounded-[1.75rem] bg-brand-soft shadow-[0_24px_60px_rgba(40,80,120,0.14)] will-change-transform md:rounded-[2rem]"
           >
             <div className="aspect-[4/5] w-full lg:max-h-[calc(100dvh-7rem)]">
@@ -81,37 +88,39 @@ export default function AboutDR() {
               />
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
-        {/* Content — first on mobile/tablet, right on desktop */}
-        <div className="order-1 flex min-w-0 flex-col gap-8 pb-2 sm:gap-9 md:gap-10 lg:order-2 lg:gap-11">
-          {/* Name + credentials */}
+        <motion.div
+          className="order-1 flex min-w-0 flex-col gap-8 pb-2 sm:gap-9 md:gap-10 lg:order-2 lg:gap-11"
+          initial={reduce ? false : 'hidden'}
+          whileInView="show"
+          viewport={{ once: true, amount: 0.12 }}
+          variants={fadeRight}
+        >
           <RevealBlock>
             <p className="type-eyebrow text-brand-teal">About the Doctor</p>
             <h2 className="type-section-title mt-2 text-[#292929]">{name}</h2>
-            <p className="type-desc-sm mt-3 max-w-xl text-lg md:text-xl text-gray-700">{title}</p>
+            <p className="type-desc-sm mt-3 max-w-xl text-lg text-gray-700 md:text-xl">{title}</p>
           </RevealBlock>
 
-          {/* Intro */}
           <div className="space-y-4">
             {intro.map((paragraph, i) => (
-              <RevealBlock key={paragraph.slice(0, 40)} delay={0.06 + i * 0.05}>
-                <p className="type-desc text-lg md:text-xl text-gray-700">{paragraph}</p>
+              <RevealBlock key={paragraph.slice(0, 40)} delay={0.06 + i * 0.06}>
+                <p className="type-desc text-lg text-gray-700 md:text-xl">{paragraph}</p>
               </RevealBlock>
             ))}
           </div>
 
-          {/* Education */}
           <RevealBlock delay={0.05}>
             <SectionHeading>{education.heading}</SectionHeading>
-            <ul className="mt-4  space-y-3">
+            <ul className="mt-4 space-y-3">
               {education.items.map((item) => (
-                <li key={item.degree} className="flex  gap-3">
+                <li key={item.degree} className="flex gap-3">
                   <span
                     className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-orange"
                     aria-hidden="true"
                   />
-                  <p className="type-desc-sm text-lg md:text-xl text-gray-700">
+                  <p className="type-desc-sm text-lg text-gray-700 md:text-xl">
                     <span className="font-semibold text-brand">{item.degree}</span>
                     {' — '}
                     {item.place}
@@ -121,7 +130,6 @@ export default function AboutDR() {
             </ul>
           </RevealBlock>
 
-          {/* Experience */}
           <RevealBlock delay={0.05}>
             <SectionHeading>{experience.heading}</SectionHeading>
             <ul className="mt-4 space-y-3">
@@ -131,7 +139,7 @@ export default function AboutDR() {
                     className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-orange"
                     aria-hidden="true"
                   />
-                  <p className="type-desc-sm text-lg md:text-xl text-gray-700">
+                  <p className="type-desc-sm text-lg text-gray-700 md:text-xl">
                     <span className="font-semibold text-brand">{item.role}</span>
                     {' — '}
                     {item.place}
@@ -144,7 +152,7 @@ export default function AboutDR() {
                     className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-orange"
                     aria-hidden="true"
                   />
-                  <p className="type-desc-sm font-semibold text-lg md:text-xl text-brand">
+                  <p className="type-desc-sm text-lg font-semibold text-brand md:text-xl">
                     {experience.highlight}
                   </p>
                 </li>
@@ -152,7 +160,6 @@ export default function AboutDR() {
             </ul>
           </RevealBlock>
 
-          {/* Recognition */}
           <RevealBlock delay={0.05}>
             <SectionHeading>{recognition.heading}</SectionHeading>
             <blockquote className="relative mt-4 rounded-xl bg-brand-teal-soft px-5 py-4 md:px-6 md:py-5">
@@ -162,26 +169,10 @@ export default function AboutDR() {
               >
                 “
               </span>
-              <p className="type-desc pl-1 pt-4 text-lg md:text-xl text-brand-dark">{recognition.text}</p>
+              <p className="type-desc pl-1 pt-4 text-lg text-brand-dark md:text-xl">{recognition.text}</p>
             </blockquote>
           </RevealBlock>
-
-          {/* Expertise */}
-          {/* <RevealBlock delay={0.05}>
-            <SectionHeading>{expertise.heading}</SectionHeading>
-            <ul className="mt-4 grid gap-2.5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">
-              {expertise.items.map((item) => (
-                <li key={item} className="flex gap-3">
-                  <span
-                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-teal"
-                    aria-hidden="true"
-                  />
-                  <p className="type-desc-sm text-brand-muted-dark">{item}</p>
-                </li>
-              ))}
-            </ul>
-          </RevealBlock> */}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

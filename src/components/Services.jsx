@@ -274,9 +274,9 @@ export default function Services() {
     >
       <div className="container relative mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <motion.h2
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.65, ease: EASE }}
+          transition={{ duration: 0.7, ease: EASE }}
           className="type-section-title mx-auto text-center text-[#292929]"
         >
           {title}
@@ -284,9 +284,9 @@ export default function Services() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 36 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.75, delay: 0.08, ease: EASE }}
+        transition={{ duration: 0.85, delay: 0.12, ease: EASE }}
         className="relative mt-8 sm:mt-10 md:mt-12"
       >
         <div
