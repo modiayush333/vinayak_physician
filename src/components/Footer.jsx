@@ -153,9 +153,9 @@ export default function Footer() {
 
                 <div className="mt-4 space-y-5 sm:mt-5 sm:space-y-6">
                   <div className="flex items-start gap-3">
-                    <span className="mt-0.5 shrink-0">
+                    {/* <span className="mt-0.5 shrink-0">
                       <IconPin />
-                    </span>
+                    </span> */}
                     <div className="min-w-0 ">
                       <p className="type-card-title  text-brand">Address</p>
                       <p className="type-desc-sm mt-1 text-[15px] md:text-md max-w-sm text-gray-700">
@@ -165,9 +165,9 @@ export default function Footer() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <span className="mt-0.5 shrink-0">
+                    {/* <span className="mt-0.5 shrink-0">
                       <IconClock />
-                    </span>
+                    </span> */}
                     <div className="min-w-0">
                       <p className="type-card-title  text-brand">Opening hours</p>
                       <ul className="mt-1.5  space-y-1">
@@ -182,9 +182,9 @@ export default function Footer() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <span className="mt-0.5 shrink-0">
+                    {/* <span className="mt-0.5 shrink-0">
                       <IconCall />
-                    </span>
+                    </span> */}
                     <div className="min-w-0">
                       <p className="type-card-title text-brand">Contact</p>
                       <a
