@@ -1,10 +1,10 @@
 export const heroData = {
   eyebrow: 'Vinayak Heart Medicare',
   title: {
-    first: 'Expert',
+    first: 'Expert Medical Care',
     second: 'Medical Care',
-    accent: 'for a Healthier',
-    last: 'Tomorrow',
+    accent: 'Healthier',
+    last: 'Tomorrow.',
   },
   description:
     'Providing comprehensive diagnosis, treatment, and preventive healthcare with compassionate, evidence-based medical care for patients of all ages.',
@@ -13,8 +13,23 @@ export const heroData = {
     href: '#about-dr',
   },
   secondary: {
-    label: 'How It Works',
-    href: '#process',
+    label: 'Our Services',
+    href: '#services',
+  },
+  cards: {
+    caring: {
+      title: 'Caring for\nAll Ages',
+      subtitle: 'Comprehensive Family Care',
+      buttonText: 'Our Services',
+      buttonHref: '#services',
+    },
+    preventive: {
+      title: 'Preventive &\nPersonalized Care',
+      description:
+        'From routine checkups to long-term wellness, we focus on care that fits your needs.',
+      buttonText: 'Learn More',
+      buttonHref: '#services',
+    },
   },
   benefits: [
     {

@@ -7,8 +7,8 @@ const EASE = [0.22, 1, 0.36, 1]
 
 const SPEED = {
   desktop: 180,
-  tablet: 240,
-  mobile: 200,
+  tablet: 100,
+  mobile: 100,
 }
 
 const GAP = {
@@ -66,13 +66,13 @@ function ServiceSlide({ item, index, gap, decorative = false }) {
           {num}
         </span>
         <span className="mt-2 h-8 w-px shrink-0 bg-white/55" aria-hidden="true" />
-        <h3 className="mt-2 min-w-0 font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-white sm:text-[1.05rem] md:text-[1.35rem] lg:text-[1.5rem]">
+        <h3 className="mt-2 min-w-0 font-display text-[1.2rem] font-semibold leading-snug tracking-tight text-white sm:text-[1.7rem] lg:text-[1.5rem]">
           {item.title}
         </h3>
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-5 sm:px-5 sm:pb-6 md:pb-7">
-        <p className="font-body text-[13px] leading-relaxed text-white/90 text-lg md:text-xl">
+        <p className="font-body text-lg leading-relaxed text-white/90 sm:text-xl lg:text-xl">
           {item.description}
         </p>
       </div>
