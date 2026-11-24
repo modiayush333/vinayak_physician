@@ -3,6 +3,26 @@ import images from '../Images'
 export const aboutDrData = {
   image: images.drroank,
   name: 'Dr. Ronak Modi',
+  badge: 'Consultant Physician',
+  eyebrow: 'MEET THE DOCTOR',
+  subtitle:
+    'M.D. Medicine | Cardiologist & Diabetologist | ICU & Critical Care Specialist',
+  shortBio:
+    'Experienced physician dedicated to comprehensive, patient-focused care in heart health, diabetes, general medicine and critical care.',
+  stat: {
+    count: '5,000+',
+    label: 'ICU & critical-care patients treated',
+  },
+  educationSummary: [
+    'MBBS – B.J. Medical College',
+    'M.D. Medicine – VS Hospital',
+  ],
+  experienceSummary: 'Apollo Hospital • Civil Hospital • Rajesh Hospital',
+  recognitionSummary: {
+    heading: 'District Health Recognition',
+    description:
+      'Honoured by the District Tuberculosis Control Society for outstanding contribution in TB treatment across Gandhinagar district.',
+  },
   title:
     'M.D. Medicine | Consultant Physician | Cardiologist & Diabetologist | ICU & Critical Care Specialist',
   intro: [
@@ -32,7 +52,6 @@ export const aboutDrData = {
         place: 'Rajesh Hospital, Kalol',
       },
     ],
-    highlight: 'Successfully treated 5,000+ ICU and critically ill patients',
   },
   recognition: {
     heading: 'Recognition and Award',
