@@ -12,11 +12,11 @@ function IconPin() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"
-        stroke="#5EC4D4"
+        stroke="#A9C9E5"
         strokeWidth="2"
         strokeLinejoin="round"
       />
-      <circle cx="12" cy="10" r="2.5" stroke="#5EC4D4" strokeWidth="2" />
+      <circle cx="12" cy="10" r="2.5" stroke="#A9C9E5" strokeWidth="2" />
     </svg>
   )
 }
@@ -24,8 +24,8 @@ function IconPin() {
 function IconClock() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="8" stroke="#5EC4D4" strokeWidth="2" />
-      <path d="M12 8v5l3 2" stroke="#5EC4D4" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8" stroke="#A9C9E5" strokeWidth="2" />
+      <path d="M12 8v5l3 2" stroke="#A9C9E5" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }
@@ -35,7 +35,7 @@ function IconCall() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M7 3h3l2 5-2 1a12 12 0 0 0 5 5l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 5 5a2 2 0 0 1 2-2Z"
-        stroke="#5EC4D4"
+        stroke="#A9C9E5"
         strokeWidth="2"
         strokeLinejoin="round"
       />
@@ -67,7 +67,7 @@ export default function Footer() {
         {/* ============================================================== */}
         {/* 1. TOP CTA SECTION (CURVED BLUE THEME BANNER)                  */}
         {/* ============================================================== */}
-        <div className="relative w-full bg-gradient-to-br from-[#1b436c] via-[#204e7c] to-[#15385b] flex-1 flex flex-col justify-center py-12 sm:py-16 lg:py-0 text-white overflow-hidden">
+        <div className="relative w-full bg-gradient-to-br from-[#173653] via-[#1c3f62] to-[#11273C] flex-1 flex flex-col justify-center py-12 sm:py-16 lg:py-0 text-white overflow-hidden">
           {/* Organic Flowing Ribbon Waves in Background */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-25">
             <svg
@@ -123,7 +123,7 @@ export default function Footer() {
               <button
                 type="button"
                 onClick={() => setBookingOpen(true)}
-                className="inline-flex items-center justify-center rounded-full bg-white text-[#1A354F] hover:bg-white/90 active:scale-95 px-7 sm:px-8 py-2.5 sm:py-3 text-base sm:text-xl lg:text-base font-bold transition-all shadow-lg hover:shadow-xl cursor-pointer"
+                className="inline-flex items-center justify-center rounded-full bg-white text-[#173653] hover:bg-[#F7F1E8] active:scale-95 px-7 sm:px-8 py-2.5 sm:py-3 text-base sm:text-xl lg:text-base font-bold transition-all shadow-lg hover:shadow-xl cursor-pointer"
               >
                 {ctaPrimary?.label || 'Book an Appointment'}
               </button>
@@ -134,7 +134,7 @@ export default function Footer() {
         {/* ============================================================== */}
         {/* 2. CONCAVE SCOOP DIVIDER (MATCHING REFERENCE IMAGE CURVE)      */}
         {/* ============================================================== */}
-        <div className="relative w-full overflow-hidden leading-none -mt-px select-none pointer-events-none bg-[#051d39] shrink-0">
+        <div className="relative w-full overflow-hidden leading-none -mt-px select-none pointer-events-none bg-[#11273C] shrink-0">
           <svg
             viewBox="0 0 1440 90"
             fill="none"
@@ -142,14 +142,14 @@ export default function Footer() {
             preserveAspectRatio="none"
           >
             {/* Downward curving blue scoop */}
-            <path d="M0,0 L1440,0 L1440,25 Q720,88 0,25 Z" fill="#1b436c" />
+            <path d="M0,0 L1440,0 L1440,25 Q720,88 0,25 Z" fill="#173653" />
           </svg>
         </div>
 
         {/* ============================================================== */}
-        {/* 3. MAIN DARK FOOTER (DEEP BLUE THEME + 3 COLUMNS)             */}
+        {/* 3. MAIN DARK FOOTER (DEEP NAVY THEME + 3 COLUMNS)             */}
         {/* ============================================================== */}
-        <div className="relative w-full bg-[#051d39] flex-1 flex flex-col justify-between pt-6 sm:pt-8 lg:pt-5 pb-5 sm:pb-6 text-white overflow-hidden">
+        <div className="relative w-full bg-[#11273C] flex-1 flex flex-col justify-between pt-6 sm:pt-8 lg:pt-5 pb-5 sm:pb-6 text-white overflow-hidden">
           {/* Subtle Bottom Organic Wave Graphic */}
           <div className="absolute bottom-0 left-0 right-0 pointer-events-none select-none overflow-hidden leading-none opacity-20">
             <svg
@@ -190,7 +190,7 @@ export default function Footer() {
                   <button
                     type="button"
                     onClick={() => setBookingOpen(true)}
-                    className="inline-flex items-center justify-center rounded-full bg-[#285078] hover:bg-[#1A354F] border border-white/20 active:scale-95 px-6 sm:px-7 py-2 sm:py-2.5 text-base sm:text-xl lg:text-base font-semibold text-white transition-all shadow-md cursor-pointer"
+                    className="inline-flex items-center justify-center rounded-full bg-[#173653] hover:bg-[#11273C] border border-[#A9C9E5]/40 active:scale-95 px-6 sm:px-7 py-2 sm:py-2.5 text-base sm:text-xl lg:text-base font-semibold text-white transition-all shadow-md cursor-pointer"
                   >
                     Book Online
                   </button>
@@ -201,7 +201,7 @@ export default function Footer() {
               {/* COLUMN 2: EXPLORE (Vertical links)                       */}
               {/* -------------------------------------------------------- */}
               <div className="lg:col-span-3">
-                <h4 className="text-lg sm:text-2xl lg:text-xl font-bold uppercase tracking-[0.18em] text-[#5EC4D4] mb-3">
+                <h4 className="text-lg sm:text-2xl lg:text-xl font-bold uppercase tracking-[0.18em] text-[#A9C9E5] mb-3">
                   EXPLORE
                 </h4>
                 <ul className="space-y-2 sm:space-y-2.5 text-base sm:text-xl lg:text-base text-white/80">
@@ -222,7 +222,7 @@ export default function Footer() {
               {/* COLUMN 3: HOSPITAL INFO (Address, Hours, Contact)        */}
               {/* -------------------------------------------------------- */}
               <div className="lg:col-span-4">
-                <h4 className="text-lg sm:text-2xl lg:text-xl font-bold uppercase tracking-[0.18em] text-[#5EC4D4] mb-3">
+                <h4 className="text-lg sm:text-2xl lg:text-xl font-bold uppercase tracking-[0.18em] text-[#A9C9E5] mb-3">
                   HOSPITAL INFO
                 </h4>
 

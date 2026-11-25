@@ -7,8 +7,9 @@ import Swal from 'sweetalert2'
 import * as Yup from 'yup'
 import { footerData } from '../assets/Data/Footer'
 
-const NAVY = '#285078'
-const MUTED = '#9AA3AD'
+const NAVY = '#173653'
+const MUTED = '#795744'
+const BROWN = '#795744'
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const MONTHS = [
   'January',
@@ -25,7 +26,7 @@ const MONTHS = [
   'December',
 ]
 
-function IconCalendar({ color = NAVY }) {
+function IconCalendar({ color = BROWN }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <rect x="3" y="5" width="18" height="16" rx="2" stroke={color} strokeWidth="1.6" />
@@ -34,7 +35,7 @@ function IconCalendar({ color = NAVY }) {
   )
 }
 
-function IconPhone({ color = NAVY }) {
+function IconPhone({ color = BROWN }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -52,11 +53,11 @@ function IconShield() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M12 3 5 6v5c0 4.5 3 8 7 9 4-1 7-4.5 7-9V6l-7-3Z"
-        stroke={NAVY}
+        stroke={BROWN}
         strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <path d="m9 12 2 2 4-4" stroke={NAVY} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m9 12 2 2 4-4" stroke={BROWN} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -99,10 +100,10 @@ function StepIcon({ type }) {
 }
 
 const fieldClass = `
-  w-full rounded-xl border border-[#E2E8EE] bg-white
-  font-body text-[14px] text-brand-dark outline-none
-  transition focus:border-brand/45
-  placeholder:text-[#A0A8B0]
+  w-full rounded-xl border border-[#E7DECE] bg-[#FAF7F2]
+  font-body text-[14px] text-[#173653] outline-none
+  transition focus:border-[#795744]/60 focus:bg-white
+  placeholder:text-[#795744]/45
 `
 
 const fieldErrorClass = 'border-red-400 focus:border-red-400'
@@ -305,7 +306,7 @@ function DatePickerField({ value, onChange, error }) {
         aria-expanded={open}
         aria-invalid={Boolean(error)}
       >
-        <span className={value ? 'text-brand-dark' : 'text-[#A0A8B0]'}>
+        <span className={value ? 'text-[#173653]' : 'text-[#795744]/50'}>
           {value ? formatDateLabel(value) : 'Select preferred date'}
         </span>
         <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
@@ -334,12 +335,12 @@ function DatePickerField({ value, onChange, error }) {
                   zIndex: 200,
                   overflowY: 'auto',
                 }}
-                className="rounded-2xl border border-[#E8EEF2] bg-white p-4 shadow-[0_18px_48px_rgba(15,40,60,0.18)]"
+                className="rounded-2xl border border-[#E7DECE] bg-white p-4 shadow-[0_18px_48px_rgba(23,54,83,0.14)]"
                 role="dialog"
                 aria-label="Choose preferred date"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <p className="font-body text-[15px] font-semibold text-brand-dark">
+                  <p className="font-body text-[15px] font-semibold text-[#173653]">
                     {MONTHS[view.getMonth()]} {view.getFullYear()}
                   </p>
                   <div className="flex items-center gap-1">
@@ -347,7 +348,7 @@ function DatePickerField({ value, onChange, error }) {
                       type="button"
                       aria-label="Previous month"
                       onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))}
-                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-brand-muted-dark transition hover:bg-brand-soft"
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#795744] transition hover:bg-[#FAF7F2]"
                     >
                       ‹
                     </button>
@@ -355,7 +356,7 @@ function DatePickerField({ value, onChange, error }) {
                       type="button"
                       aria-label="Next month"
                       onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))}
-                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-brand-muted-dark transition hover:bg-brand-soft"
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#795744] transition hover:bg-[#FAF7F2]"
                     >
                       ›
                     </button>
@@ -366,7 +367,7 @@ function DatePickerField({ value, onChange, error }) {
                   {WEEKDAYS.map((day) => (
                     <span
                       key={day}
-                      className="py-1 text-center font-body text-[10px] font-semibold tracking-wide text-[#A0A8B0]"
+                      className="py-1 text-center font-body text-[10px] font-semibold tracking-wide text-[#795744]/60"
                     >
                       {day}
                     </span>
@@ -389,9 +390,9 @@ function DatePickerField({ value, onChange, error }) {
                         className={`
                           relative flex h-11 min-h-11 cursor-pointer items-center justify-center rounded-full font-body text-[13px]
                           transition
-                          ${outside ? 'text-[#C5CED6]' : 'text-brand-dark'}
-                          ${disabled ? 'cursor-not-allowed opacity-35' : 'hover:bg-brand-soft'}
-                          ${selected ? 'bg-brand font-semibold text-white hover:bg-brand' : ''}
+                          ${outside ? 'text-[#795744]/35' : 'text-[#173653]'}
+                          ${disabled ? 'cursor-not-allowed opacity-35' : 'hover:bg-[#F5EFEB]'}
+                          ${selected ? 'bg-[#795744] font-semibold text-white hover:bg-[#634534] shadow-xs' : ''}
                         `}
                       >
                         {date.getDate()}
@@ -432,7 +433,7 @@ function GenderPickerField({ value, onChange, error }) {
         aria-expanded={open}
         aria-invalid={Boolean(error)}
       >
-        <span className={value ? 'text-brand-dark' : 'text-[#A0A8B0]'}>{value || 'Gender'}</span>
+        <span className={value ? 'text-[#173653]' : 'text-[#795744]/50'}>{value || 'Gender'}</span>
         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#9AA3AD]">
           ▾
         </span>
@@ -458,7 +459,7 @@ function GenderPickerField({ value, onChange, error }) {
                   maxHeight: pos.maxHeight,
                   zIndex: 200,
                 }}
-                className="overflow-hidden rounded-2xl border border-[#E8EEF2] bg-white p-3 shadow-[0_18px_48px_rgba(15,40,60,0.18)]"
+                className="overflow-hidden rounded-2xl border border-[#E7DECE] bg-white p-3 shadow-[0_18px_48px_rgba(23,54,83,0.14)]"
                 role="listbox"
                 aria-label="Choose gender"
               >
@@ -480,8 +481,8 @@ function GenderPickerField({ value, onChange, error }) {
                           font-body text-[14px] font-medium transition
                           ${
                             active
-                              ? 'border-brand bg-brand text-white'
-                              : 'border-[#D1D9E6] bg-[#F5F7FA] text-brand-dark hover:border-brand/30'
+                              ? 'border-[#795744] bg-[#795744] text-white shadow-xs'
+                              : 'border-[#E7DECE] bg-[#FAF7F2] text-[#173653] hover:border-[#795744]/40 hover:bg-[#F5EFEB]'
                           }
                         `}
                       >
@@ -519,7 +520,7 @@ function ServicePickerField({ value, onChange, options = [], error }) {
         aria-expanded={open}
         aria-invalid={Boolean(error)}
       >
-        <span className={`truncate ${value ? 'text-brand-dark' : 'text-[#A0A8B0]'}`}>
+        <span className={`truncate ${value ? 'text-[#173653]' : 'text-[#795744]/50'}`}>
           {value || 'Select a service'}
         </span>
         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#9AA3AD]">
@@ -547,7 +548,7 @@ function ServicePickerField({ value, onChange, options = [], error }) {
                   maxHeight: pos.maxHeight,
                   zIndex: 200,
                 }}
-                className="flex flex-col overflow-hidden rounded-2xl border border-[#E8EEF2] bg-white shadow-[0_18px_48px_rgba(15,40,60,0.18)]"
+                className="flex flex-col overflow-hidden rounded-2xl border border-[#E7DECE] bg-white shadow-[0_18px_48px_rgba(23,54,83,0.14)]"
                 role="listbox"
                 aria-label="Choose a service"
               >
@@ -569,8 +570,8 @@ function ServicePickerField({ value, onChange, options = [], error }) {
                           text-center font-body text-[14px] font-medium transition
                           ${
                             active
-                              ? 'border-brand bg-brand text-white'
-                              : 'border-[#D1D9E6] bg-[#F5F7FA] text-brand-dark hover:border-brand/30'
+                              ? 'border-[#795744] bg-[#795744] text-white shadow-xs'
+                              : 'border-[#E7DECE] bg-[#FAF7F2] text-[#173653] hover:border-[#795744]/40 hover:bg-[#F5EFEB]'
                           }
                         `}
                       >
@@ -621,7 +622,7 @@ function TimePickerField({ value, onChange, selectedDate, error }) {
         aria-expanded={open}
         aria-invalid={Boolean(error)}
       >
-        <span className={value ? 'text-brand-dark' : 'text-[#A0A8B0]'}>
+        <span className={value ? 'text-[#173653]' : 'text-[#795744]/50'}>
           {display || 'Select preferred time'}
         </span>
         <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
@@ -649,18 +650,18 @@ function TimePickerField({ value, onChange, selectedDate, error }) {
                   maxHeight: pos.maxHeight,
                   zIndex: 200,
                 }}
-                className="flex flex-col overflow-hidden rounded-2xl border border-[#E8EEF2] bg-white shadow-[0_18px_48px_rgba(15,40,60,0.18)]"
+                className="flex flex-col overflow-hidden rounded-2xl border border-[#E7DECE] bg-white shadow-[0_18px_48px_rgba(23,54,83,0.14)]"
                 role="listbox"
                 aria-label="Choose preferred time"
               >
-                <div className="flex shrink-0 items-center justify-between border-b border-[#EEF1F4] px-3.5 py-3">
-                  <p className="font-body text-[14px] font-semibold text-brand-dark">{dayLabel}</p>
-                  <div className="flex rounded-full bg-[#EEF1F4] p-0.5">
+                <div className="flex shrink-0 items-center justify-between border-b border-[#E7DECE] px-3.5 py-3">
+                  <p className="font-body text-[14px] font-semibold text-[#173653]">{dayLabel}</p>
+                  <div className="flex rounded-full bg-[#FAF7F2] border border-[#E7DECE] p-0.5">
                     <button
                       type="button"
                       onClick={() => setMode12(true)}
                       className={`cursor-pointer rounded-full px-2.5 py-1 font-body text-[11px] font-semibold transition ${
-                        mode12 ? 'bg-white text-brand shadow-sm' : 'text-brand-muted-dark'
+                        mode12 ? 'bg-white text-[#795744] shadow-xs' : 'text-[#795744]/70'
                       }`}
                     >
                       12h
@@ -669,7 +670,7 @@ function TimePickerField({ value, onChange, selectedDate, error }) {
                       type="button"
                       onClick={() => setMode12(false)}
                       className={`cursor-pointer rounded-full px-2.5 py-1 font-body text-[11px] font-semibold transition ${
-                        !mode12 ? 'bg-white text-brand shadow-sm' : 'text-brand-muted-dark'
+                        !mode12 ? 'bg-white text-[#795744] shadow-xs' : 'text-[#795744]/70'
                       }`}
                     >
                       24h
@@ -695,8 +696,8 @@ function TimePickerField({ value, onChange, selectedDate, error }) {
                           font-body text-[14px] font-medium transition
                           ${
                             active
-                              ? 'border-brand bg-brand text-white'
-                              : 'border-[#E8EEF2] bg-[#F7F9FB] text-brand-dark hover:border-brand/30'
+                              ? 'border-[#795744] bg-[#795744] text-white shadow-xs'
+                              : 'border-[#E7DECE] bg-[#FAF7F2] text-[#173653] hover:border-[#795744]/40 hover:bg-[#F5EFEB]'
                           }
                         `}
                       >
@@ -804,8 +805,8 @@ export default function BookingModal({ open, onClose }) {
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="
-              relative z-10 grid w-full max-w-5xl rounded-t-[1.25rem] bg-white
-              shadow-[0_30px_80px_rgba(15,40,60,0.28)]
+              relative z-10 grid w-full max-w-5xl rounded-t-[1.25rem] bg-white border border-[#E7DECE]
+              shadow-[0_30px_80px_rgba(23,54,83,0.2)]
               max-h-[96dvh] overflow-y-auto overscroll-contain
               grid-cols-1
               sm:max-h-[min(92svh,880px)] sm:rounded-[1.35rem]
@@ -814,7 +815,7 @@ export default function BookingModal({ open, onClose }) {
           >
             <aside
               className="
-                hidden h-full min-h-0 flex-col overflow-y-auto bg-brand-teal-soft
+                hidden h-full min-h-0 flex-col overflow-y-auto bg-[#F5EFEB] border-r border-[#E7DECE]
                 lg:flex
                 px-5 py-6
                 sm:px-7 sm:py-8
@@ -822,8 +823,8 @@ export default function BookingModal({ open, onClose }) {
               "
             >
               <div className="shrink-0">
-                <p className="type-eyebrow text-brand">{booking.eyebrow}</p>
-                <h2 className="type-subheading mt-3 text-[#292929] sm:mt-3.5">
+                <p className="type-eyebrow text-[#795744] font-semibold">{booking.eyebrow}</p>
+                <h2 className="font-serif text-2xl lg:text-[1.75rem] text-[#173653] font-normal mt-3 leading-snug">
                   {booking.sidebarTitle}
                 </h2>
               </div>
@@ -833,22 +834,22 @@ export default function BookingModal({ open, onClose }) {
                   <li
                     key={step.title}
                     className="
-                      flex flex-1 items-start rounded-2xl bg-white
+                      flex flex-1 items-start rounded-2xl bg-white border border-[#E7DECE]
                       px-4 py-4
-                      shadow-[0_8px_24px_rgba(40,80,120,0.07)]
+                      shadow-2xs
                       sm:px-5 sm:py-5
                       lg:px-6 lg:py-6
                     "
                   >
                     <div className="flex w-full items-start gap-3.5 sm:gap-4">
-                      <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-teal-soft sm:h-11 sm:w-11">
+                      <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FAF7F2] border border-[#E7DECE] text-[#795744] sm:h-11 sm:w-11">
                         <StepIcon type={step.icon} />
                       </span>
                       <div className="min-w-0 flex-1 pt-0.5">
-                        <h3 className="font-display text-[15px] font-semibold tracking-tight text-brand sm:text-[16px]">
+                        <h3 className="font-display text-[15px] font-semibold tracking-tight text-[#173653] sm:text-[16px]">
                           {step.title}
                         </h3>
-                        <p className="mt-1.5 font-body text-[13px] leading-relaxed text-gray-700 sm:mt-2 sm:text-[14px]">
+                        <p className="mt-1.5 font-body text-[13px] leading-relaxed text-[#795744]/80 sm:mt-2 sm:text-[14px]">
                           {step.description}
                         </p>
                       </div>
@@ -858,15 +859,15 @@ export default function BookingModal({ open, onClose }) {
               </ul>
             </aside>
 
-            <div className="relative flex min-h-0 flex-col overflow-visible px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 sm:px-7 sm:py-8 md:px-8 md:py-9 lg:overflow-y-auto lg:px-9 lg:py-10">
+            <div className="relative flex min-h-0 flex-col overflow-visible bg-white px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 sm:px-7 sm:py-8 md:px-8 md:py-9 lg:overflow-y-auto lg:px-9 lg:py-10">
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close"
                 className="
                   absolute right-3 top-3 z-20 flex h-9 w-9 cursor-pointer items-center justify-center
-                  rounded-full bg-[#EEF1F4] text-brand-muted-dark transition hover:bg-[#E2E8EE] hover:text-brand-dark
-                  sm:right-5 sm:top-5
+                  rounded-full bg-[#FAF7F2] border border-[#E7DECE] text-[#795744] transition hover:bg-[#795744] hover:text-white
+                  sm:right-5 sm:top-5 shadow-2xs
                 "
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -874,7 +875,9 @@ export default function BookingModal({ open, onClose }) {
                 </svg>
               </button>
 
-              <h3 id="booking-title" className="type-subheading pr-10 text-[#292929]">{booking.formTitle}</h3>
+              <h3 id="booking-title" className="font-serif text-2xl lg:text-[1.85rem] text-[#173653] font-normal pr-10">
+                {booking.formTitle}
+              </h3>
 
               <form
                 onSubmit={handleSubmit(onValid, onInvalid)}
@@ -1090,8 +1093,8 @@ export default function BookingModal({ open, onClose }) {
                   type="submit"
                   disabled={isSubmitting}
                   className="
-                    type-btn mt-1 w-full cursor-pointer rounded-xl bg-brand py-3.5 text-white
-                    transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-70
+                    type-btn mt-1 w-full cursor-pointer rounded-xl bg-[#A9C9E5] hover:bg-[#96BEDF] active:bg-[#85AFCF] py-3.5 text-[#173653] font-bold text-sm sm:text-base
+                    border border-[#92B8D9]/60 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-70 shadow-sm
                     sm:mt-2 sm:py-4
                   "
                 >

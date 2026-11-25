@@ -42,8 +42,8 @@ export default function Navbar() {
       <nav
         className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
           scrolled || menuOpen
-            ? ' bg-white/85 shadow-[0_10px_40px_rgba(23,61,68,0.1)] backdrop-blur-2xl backdrop-saturate-150 border-b border-gray-100/60'
-            : ' bg-white/65 shadow-[0_4px_24px_rgba(23,61,68,0.06)] backdrop-blur-xl backdrop-saturate-150 border-b border-white/40'
+            ? ' bg-[#FAF7F2]/90 shadow-[0_10px_40px_rgba(23,61,68,0.08)] backdrop-blur-2xl backdrop-saturate-150 border-b border-[#E7DECE]/80'
+            : ' bg-[#FAF7F2]/75 shadow-[0_4px_24px_rgba(23,61,68,0.05)] backdrop-blur-xl backdrop-saturate-150 border-b border-[#E7DECE]/50'
         }`}
       >
         <div className="container mx-auto flex min-h-16 items-center justify-between gap-2 px-4 py-2.5 sm:min-h-[72px] sm:gap-3 sm:px-6 md:px-8 lg:px-10 xl:px-12">
@@ -65,10 +65,10 @@ export default function Navbar() {
               <li key={link.label}>
                 <a
                   href={link.href}
-                  className="type-nav group relative px-2.5 py-2 text-[#294f56] transition-colors hover:text-brand-teal xl:px-4"
+                  className="type-nav group relative px-2.5 py-2 text-[#173653] transition-colors hover:text-[#795744] xl:px-4"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[1.5px] origin-left scale-x-0 rounded-full bg-brand-teal transition-transform duration-300 group-hover:scale-x-100 xl:left-4 xl:right-4" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[1.5px] origin-left scale-x-0 rounded-full bg-[#795744] transition-transform duration-300 group-hover:scale-x-100 xl:left-4 xl:right-4" />
                 </a>
               </li>
             ))}
@@ -80,7 +80,7 @@ export default function Navbar() {
               onClick={openBookingModal}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="type-btn hidden cursor-pointer rounded-full bg-brand px-5 py-2.5 text-white shadow-[0_6px_20px_rgba(23,61,68,0.18)] transition-colors hover:bg-[#003871] lg:inline-flex"
+              className="type-btn hidden cursor-pointer rounded-full bg-[#173653] px-5 py-2.5 text-white shadow-[0_6px_20px_rgba(23,54,83,0.18)] transition-colors hover:bg-[#11273C] lg:inline-flex"
             >
               Book Online
             </motion.button>
@@ -88,13 +88,13 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[5px] rounded-full border border-[#173d44]/20 bg-white/60 lg:hidden"
+              className="flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-[5px] rounded-full border border-[#173653]/20 bg-white/60 lg:hidden"
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
             >
               <motion.span
                 animate={menuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                className="block h-[1.5px] w-5 bg-[#173d44]"
+                className="block h-[1.5px] w-5 bg-[#173653]"
               />
               <motion.span
                 animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
@@ -129,7 +129,7 @@ export default function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="type-nav block min-h-12 rounded-xl px-4 py-3 font-semibold text-[#1A354F] transition-colors hover:bg-[#EAF7F9] hover:text-brand-teal active:bg-[#EAF7F9]"
+                    className="type-nav block min-h-12 rounded-xl px-4 py-3 font-semibold text-[#173653] transition-colors hover:bg-[#F7F1E8] hover:text-[#795744] active:bg-[#F7F1E8]"
                   >
                     {link.label}
                   </a>
@@ -142,7 +142,7 @@ export default function Navbar() {
                 setMenuOpen(false)
                 openBookingModal()
               }}
-              className="type-btn mt-4 block w-full cursor-pointer rounded-full bg-brand-teal px-5 py-3 text-center uppercase tracking-[0.14em] text-white shadow-md transition-all hover:bg-brand-teal-dark active:scale-98"
+              className="type-btn mt-4 block w-full cursor-pointer rounded-full bg-[#173653] px-5 py-3 text-center uppercase tracking-[0.14em] text-white shadow-md transition-all hover:bg-[#11273C] active:scale-98"
             >
               Book Online
             </button>
