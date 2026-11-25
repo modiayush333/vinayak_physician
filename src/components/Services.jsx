@@ -104,7 +104,7 @@ function CardGroup({ items, gap, decorative = false, groupRef }) {
  * Services — infinite loop starts only after section is settled on screen
  */
 export default function Services() {
-  const { title, items } = servicesData
+  const { items } = servicesData
   const sectionRef = useRef(null)
   const stageRef = useRef(null)
   const trackRef = useRef(null)
@@ -270,16 +270,30 @@ export default function Services() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28"
+      className="relative overflow-hidden bg-[#FAF7F2] py-16 sm:pb-20 lg:pb-20 text-[#173653] transition-colors duration-300"
     >
-      <div className="container relative mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className="container relative mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 text-center">
+        {/* Pill Badge: Our Services (Exact style as About Doctor Option 1) */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.05, ease: EASE }}
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFE7DC] border border-[#E7DECE] text-xs sm:text-sm font-semibold text-[#795744] mb-4 sm:mb-6 shadow-xs"
+        >
+          <span className="w-2 h-2 rounded-full bg-[#A9C9E5]" />
+          <span>Our Services</span>
+        </motion.div>
+
+        {/* Main Editorial Heading */}
         <motion.h2
           initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.65, ease: EASE }}
-          className="type-section-title mx-auto text-center text-[#292929]"
+          transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
+          className="font-serif text-2xl min-[400px]:text-3xl sm:text-4xl lg:text-[2.75rem] xl:text-[3.25rem] text-[#173653] font-normal tracking-tight leading-[1.15] max-w-4xl mx-auto mb-4 sm:mb-6"
+          style={{ fontFamily: "'Playfair Display', Georgia, Cambria, serif" }}
         >
-          {title}
+          Comprehensive Physician Care for{' '}
+          <span className="text-[#795744]">Lifelong Health.</span>
         </motion.h2>
       </div>
 

@@ -1,8 +1,12 @@
 import Navbar from '../components/Navbar'
 import AboutDR from '../components/AboutDR'
+import AboutDROption2 from '../components/AboutDROption2'
+import AboutDROption3 from '../components/AboutDROption3'
+import WhyChooseUs from '../components/WhyChooseUs'
 import Facilities from '../components/Facilites'
 import Services from '../components/Services'
 import Process from '../components/Process'
+import HealthInsights from '../components/HealthInsights'
 // import CTA from '../components/CTA'
 import Footer from '../components/Footer'
 import Hero from '../components/Hero'
@@ -25,9 +29,13 @@ const SinglePage = () => {
       {/* <Hero2 /> */}
 
       <AboutDR />
-      <Services />
+      <AboutDROption2 />
+      <AboutDROption3 />
+      <WhyChooseUs />
       <Facilities />
+      <Services />
       <Process />
+      <HealthInsights />
       <div>
         {/* ====================================================================
             ORIGINAL CTA SECTION (COMMENTED OUT - INTEGRATED INTO NEW FOOTER BANNER)

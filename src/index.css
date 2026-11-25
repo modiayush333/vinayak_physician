@@ -32,7 +32,7 @@
   }
 
   body {
-    @apply m-0 min-w-0 font-body text-[15px] leading-relaxed text-brand-dark;
+    @apply m-0 min-w-0 font-body text-[15px] leading-relaxed text-brand-dark bg-[#FAF7F2];
     overflow-x: clip;
   }
 
@@ -132,6 +132,93 @@
   .type-caption {
     @apply font-body text-[12px] sm:text-[13px];
   }
+}
+
+/* ==========================================================================
+   SILKY SMOOTH GPU-ACCELERATED CONTINUOUS ANIMATIONS (NO BREAK / JANK FREE)
+   ========================================================================== */
+@keyframes heroDialSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitCounterRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes scrollUpInfinite {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-hero-spin {
+  animation: heroDialSpin 52s linear infinite;
+  will-change: transform;
+}
+
+.animate-orbit-rotate {
+  animation: orbitRotate 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-orbit-counter {
+  animation: orbitCounterRotate 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-scroll-up {
+  animation: scrollUpInfinite 26s linear infinite;
+  will-change: transform;
+}
+
+@keyframes floatGentle1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1.5deg);
+  }
+}
+
+@keyframes floatGentle2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(6px) rotate(-1.5deg);
+  }
+}
+
+.animate-float-1 {
+  animation: floatGentle1 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-2 {
+  animation: floatGentle2 7s ease-in-out infinite;
+  will-change: transform;
 }
 
 @media (max-width: 767px) {
